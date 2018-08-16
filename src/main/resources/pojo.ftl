@@ -1,12 +1,18 @@
 package ${packageName};
 
 import java.io.Serializable;
+<#if table.hasDate>
 import java.util.Date;
+</#if>
 
 public class ${table.className} implements Serializable {
 
             <#list table.filedList as field>
+                <#if field.remarks != "">
+                // ${field.remarks}
+                </#if>
                  private ${field.filedType} ${field.filedName};
+
             </#list>
 
             <#list table.filedList as field>
