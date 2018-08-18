@@ -11,17 +11,18 @@ public class ${table.className} implements Serializable {
                 <#if field.remarks != "">
                 // ${field.remarks}
                 </#if>
-                 private ${field.filedType} ${field.filedName};
+                public static final String ${field.cloumnName} = "${field.oldFiledName}";
+                private ${field.filedType} ${field.newFiledName};
 
             </#list>
 
             <#list table.filedList as field>
-            public void set${field.upperfiledName} (${field.filedType}  id){
-                this.${field.filedName}=${field.filedName};
+            public void set${field.upperfiledName} (${field.filedType}  ${field.newFiledName}){
+                this.${field.newFiledName}=${field.newFiledName};
             }
 
             public  ${field.filedType} get${field.upperfiledName}(){
-                return this.${field.filedName};
+                return this.${field.newFiledName};
             }
             </#list>
 }

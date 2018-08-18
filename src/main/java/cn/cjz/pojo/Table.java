@@ -8,7 +8,17 @@ import java.util.List;
  */
 public class Table {
 
+    private boolean hasDate = false;
+
     private String className;
+
+    public boolean isHasDate() {
+        return hasDate;
+    }
+
+    public void setHasDate(boolean hasDate) {
+        this.hasDate = hasDate;
+    }
 
     private List<Field> filedList = new ArrayList<Field>();
 

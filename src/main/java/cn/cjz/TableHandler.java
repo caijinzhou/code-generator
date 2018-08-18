@@ -37,10 +37,18 @@ public class TableHandler {
                 while (rs.next()) {
                     String cloumnName=rs.getString("COLUMN_NAME");
                     String cloumnType=rs.getString("TYPE_NAME");
+                    if(cloumnType.equals("DATETIME"))
+                    {
+                        table.setHasDate(true);
+                    }
+                    String columnRemarks = rs.getString("REMARKS");
                     Field field=new Field();
                     field.setUpperfiledName(captureName(cloumnName));
-                    field.setFiledName(cloumnName);
+                    field.setOldFiledName(cloumnName);
+                    field.setNewFiledName(getNewFieldName(cloumnName));
+                    field.setCloumnName(getUpperName(field.getNewFiledName()));
                     field.setFiledType(switchType(cloumnType));
+                    field.setRemarks(columnRemarks);
                     table.addFiledList(field);
                 }
                 tables.add(table);
@@ -70,14 +78,60 @@ public class TableHandler {
         return fieldNameBuffer.toString();
     }
 
+    public static String getNewFieldName(String name)
+    {
+        String newFieldName = "";
+        for (int i = 0; i < name.length(); i++) {
+            if(i == 0 && name.charAt(0) >= 'A' && name.charAt(0) <= 'Z')
+            {
+                newFieldName += (char)(name.charAt(i)+32);
+            }else if(name.charAt(i) == '_')
+            {
+                if(i != name.length()-1) {
+                    i++;
+                    if (name.charAt(i) >= 'a' && name.charAt(i) <= 'z') {
+                        newFieldName += (char) (name.charAt(i) - 32);
+                    } else {
+                        newFieldName += name.charAt(i);
+                    }
+                }
+            }else{
+                newFieldName += name.charAt(i);
+            }
+        }
+        return  newFieldName;
+    }
+
     public static String captureName(String name) {
         name = name.substring(0, 1).toUpperCase() + name.substring(1);
         return name;
     }
 
+    public static String getUpperName(String name)
+    {
+        String newName = "";
+        for (int i = 0; i < name.length(); i++) {
+            if(name.charAt(i)>= 'a' && name.charAt(i)<= 'z')
+            {
+                newName += (char)(name.charAt(i)-32);
+            }else if(name.charAt(i) >= 'A' && name.charAt(i) <= 'Z' && i != 0)
+            {
+                newName += '_';
+                newName += name.charAt(i);
+                while(i < name.length()-1 && name.charAt(i+1) >= 'A' && name.charAt(i+1) <= 'Z')
+                {
+                    i++;
+                    newName += name.charAt(i);
+                }
+            }else{
+                newName += name.charAt(i);
+            }
+        }
+        return newName;
+    }
+
     public static String switchType(String cloumnType){
         String fieldType=null;
-
         if(cloumnType.equals("VARCHAR")){
             fieldType="String";
         }else if(cloumnType.equals("BIGINT")){
